@@ -11,6 +11,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Component;
 
 import java.net.URI;
+import java.net.URISyntaxException;
 import java.util.*;
 
 @Component
@@ -41,10 +42,7 @@ public class ServiceExchange {
                 response.setStatus(HttpStatus.BAD_REQUEST);
             } else if (body.getAuthor() == null || body.getAuthor().trim().isEmpty()) {
                 //get author from url
-                URI uri = new URI(body.getUrl());
-                String[] path = uri.getPath().split("/", 0);
-                List<String> getAuthor = new ArrayList<>(Arrays.asList(path));
-                String author = getAuthor.get(1);   //this is the index to get author name
+                String author = getAuthorFromUrl(body.getUrl().trim());
 
                 body.setAuthor(author.trim());
                 body.setUrl(body.getUrl().trim());
@@ -58,8 +56,34 @@ public class ServiceExchange {
             }
 
         } catch (Exception e) {
-            logger.info("Error occurred adding repo : " + e);
-            response.setErrorMessage("Error occurred adding repo : " + e);
+            logger.info("Error occurred : " + e);
+            response.setErrorMessage("Error occurred : " + e);
+            response.setStatus(HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+
+        response.setTimestamp(new Date().toString());
+        return response;
+    }
+
+    private String getAuthorFromUrl(String url) throws URISyntaxException {
+        URI uri = new URI(url);
+        String[] path = uri.getPath().split("/", 0);
+        List<String> getAuthor = new ArrayList<>(Arrays.asList(path));
+        return getAuthor.get(1);   //this is the index to get author name
+    }
+
+    public RepoResponse getAllRepos() {
+        RepoResponse response = new RepoResponse();
+        try {
+            List<Repo> repoList = new ArrayList<>();
+            Iterable<Repo> repoIterable = serviceRepository.findAll();
+            repoIterable.forEach(repoList::add);
+
+            response.setRepos(repoList);
+            response.setStatus(HttpStatus.OK);
+        } catch (Exception e) {
+            logger.info("Error occurred : " + e);
+            response.setErrorMessage("Error occurred : " + e);
             response.setStatus(HttpStatus.INTERNAL_SERVER_ERROR);
         }
 
