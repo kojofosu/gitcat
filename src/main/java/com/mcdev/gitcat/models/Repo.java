@@ -21,8 +21,11 @@ public class Repo {
     @GenericGenerator(name = "uuid", strategy = "org.hibernate.id.UUIDGenerator")
     private String id;
 
+    @Column(nullable = false)
+    private String author, url;
+
     @Column
-    private String author, url, description;
+    private String description;
 
 //    @Column
 //    @ElementCollection(targetClass = String.class)

@@ -31,7 +31,7 @@ public class ServiceExchange {
         *   3.  check for duplicates*/
         RepoResponse response = new RepoResponse();
         try {
-            if (body.getUrl().isEmpty()) {
+            if (body.getUrl().trim().isEmpty()) {
                 logger.info("Repo's URL cannot be empty or null");
                 response.setErrorMessage("Repo's URL cannot be empty or null");
                 response.setStatus(HttpStatus.BAD_REQUEST);
@@ -39,17 +39,20 @@ public class ServiceExchange {
                 logger.info("Invalid github URL");
                 response.setErrorMessage("Invalid github URL");
                 response.setStatus(HttpStatus.BAD_REQUEST);
-            } else if (body.getAuthor() == null || body.getAuthor().isEmpty()) {
+            } else if (body.getAuthor() == null || body.getAuthor().trim().isEmpty()) {
                 //get author from url
                 URI uri = new URI(body.getUrl());
                 String[] path = uri.getPath().split("/", 0);
                 List<String> getAuthor = new ArrayList<>(Arrays.asList(path));
                 String author = getAuthor.get(1);   //this is the index to get author name
 
-                body.setAuthor(author);
+                body.setAuthor(author.trim());
+                body.setUrl(body.getUrl().trim());
                 response.setRepos(Collections.singletonList(serviceRepository.save(body)));
                 response.setStatus(HttpStatus.OK);
             } else {
+                body.setAuthor(body.getAuthor().trim());
+                body.setUrl(body.getUrl().trim());
                 response.setRepos(Collections.singletonList(serviceRepository.save(body)));
                 response.setStatus(HttpStatus.OK);
             }
