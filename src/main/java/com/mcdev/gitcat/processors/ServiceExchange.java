@@ -1,16 +1,17 @@
 package com.mcdev.gitcat.processors;
 
+import com.mcdev.gitcat.config.Constants;
 import com.mcdev.gitcat.models.Repo;
 import com.mcdev.gitcat.models.RepoResponse;
 import com.mcdev.gitcat.repositories.ServiceRepository;
-import org.apache.log4j.LogManager;
-import org.apache.log4j.Logger;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Component;
 
-import java.util.Collections;
-import java.util.Date;
+import java.net.URI;
+import java.util.*;
 
 @Component
 public class ServiceExchange {
@@ -30,8 +31,29 @@ public class ServiceExchange {
         *   3.  check for duplicates*/
         RepoResponse response = new RepoResponse();
         try {
-            response.setRepos(Collections.singletonList(serviceRepository.save(body)));
-            response.setStatus(HttpStatus.OK);
+            if (body.getUrl().isEmpty()) {
+                logger.info("Repo's URL cannot be empty or null");
+                response.setErrorMessage("Repo's URL cannot be empty or null");
+                response.setStatus(HttpStatus.BAD_REQUEST);
+            } else if (!body.getUrl().contains(Constants.GITHUB_URL_TEMPLATE)) {
+                logger.info("Invalid github URL");
+                response.setErrorMessage("Invalid github URL");
+                response.setStatus(HttpStatus.BAD_REQUEST);
+            } else if (body.getAuthor() == null || body.getAuthor().isEmpty()) {
+                //get author from url
+                URI uri = new URI(body.getUrl());
+                String[] path = uri.getPath().split("/", 0);
+                List<String> getAuthor = new ArrayList<>(Arrays.asList(path));
+                String author = getAuthor.get(1);   //this is the index to get author name
+
+                body.setAuthor(author);
+                response.setRepos(Collections.singletonList(serviceRepository.save(body)));
+                response.setStatus(HttpStatus.OK);
+            } else {
+                response.setRepos(Collections.singletonList(serviceRepository.save(body)));
+                response.setStatus(HttpStatus.OK);
+            }
+
         } catch (Exception e) {
             logger.info("Error occurred adding repo : " + e);
             response.setErrorMessage("Error occurred adding repo : " + e);

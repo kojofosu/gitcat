@@ -3,8 +3,8 @@ package com.mcdev.gitcat.controlllers;
 import com.mcdev.gitcat.models.Repo;
 import com.mcdev.gitcat.models.RepoResponse;
 import com.mcdev.gitcat.processors.ServiceExchange;
-import org.apache.log4j.LogManager;
-import org.apache.log4j.Logger;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.lang.NonNull;
@@ -16,7 +16,6 @@ import org.springframework.web.bind.annotation.RestController;
 @RestController
 public class ServiceController {
     Logger logger = LogManager.getLogger(this.getClass().getSimpleName());
-
     @Autowired
     ServiceExchange serviceExchange;
 
