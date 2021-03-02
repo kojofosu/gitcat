@@ -7,10 +7,9 @@ import org.springframework.cloud.netflix.eureka.EnableEurekaClient;
 
 @SpringBootApplication
 @EnableEurekaClient
-public class GitcatApplication{
+public class GitcatApplication {
 
-	public static void main(String[] args) {
-		SpringApplication.run(GitcatApplication.class, args);
-	}
-
+  public static void main(String[] args) {
+    SpringApplication.run(GitcatApplication.class, args);
+  }
 }
