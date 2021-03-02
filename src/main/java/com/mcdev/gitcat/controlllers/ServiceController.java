@@ -6,12 +6,8 @@ import com.mcdev.gitcat.processors.ServiceExchange;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.ResponseEntity;
 import org.springframework.lang.NonNull;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.ResponseBody;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 @RestController
 public class ServiceController {
@@ -27,5 +23,15 @@ public class ServiceController {
     public RepoResponse addRepo(@NonNull @RequestBody Repo body) {
         logger.info("Received request to add repo.");
         return serviceExchange.addRepo(body);
+    }
+
+    /*
+     * Get all available repos
+     * */
+    @GetMapping
+    @ResponseBody
+    public RepoResponse getAllRepos() {
+        logger.info("Received request to get all available repos.");
+        return serviceExchange.getAllRepos();
     }
 }
