@@ -5,6 +5,4 @@ import org.springframework.data.repository.CrudRepository;
 import org.springframework.stereotype.Repository;
 
 @Repository
-public interface ServiceRepository extends CrudRepository<Repo, String> {
-
-}
+public interface ServiceRepository extends CrudRepository<Repo, String> {}
