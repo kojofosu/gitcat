@@ -11,27 +11,26 @@ import org.springframework.web.bind.annotation.*;
 
 @RestController
 public class ServiceController {
-    Logger logger = LogManager.getLogger(this.getClass().getSimpleName());
-    @Autowired
-    ServiceExchange serviceExchange;
+  Logger logger = LogManager.getLogger(this.getClass().getSimpleName());
+  @Autowired ServiceExchange serviceExchange;
 
-    /*
-     * Add repo info
-     * */
-    @PostMapping
-    @ResponseBody
-    public RepoResponse addRepo(@NonNull @RequestBody Repo body) {
-        logger.info("Received request to add repo.");
-        return serviceExchange.addRepo(body);
-    }
+  /*
+   * Add repo info
+   * */
+  @PostMapping
+  @ResponseBody
+  public RepoResponse addRepo(@NonNull @RequestBody Repo body) {
+    logger.info("Received request to add repo.");
+    return serviceExchange.addRepo(body);
+  }
 
-    /*
-     * Get all available repos
-     * */
-    @GetMapping
-    @ResponseBody
-    public RepoResponse getAllRepos() {
-        logger.info("Received request to get all available repos.");
-        return serviceExchange.getAllRepos();
-    }
+  /*
+   * Get all available repos
+   * */
+  @GetMapping
+  @ResponseBody
+  public RepoResponse getAllRepos() {
+    logger.info("Received request to get all available repos.");
+    return serviceExchange.getAllRepos();
+  }
 }
